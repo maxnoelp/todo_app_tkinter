@@ -26,13 +26,11 @@ class TodoApp:
         )
         self.delete_task_button.pack(pady=10)
 
-        # Save Tasks Button
         self.save_tasks_button = tk.Button(
             self.root, text="Save Tasks", command=self.save_tasks
         )
         self.save_tasks_button.pack(pady=10)
 
-        # Load Tasks Button
         self.load_tasks_button = tk.Button(
             self.root, text="Load Tasks", command=self.load_tasks
         )
