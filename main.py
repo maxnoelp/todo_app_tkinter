@@ -1,5 +1,6 @@
 import tkinter as tk  # GUI Import
-from tkinter import messagebox  # Benachrichtungsbox
+from tkinter import messagebox, filedialog  # Benachrichtungsbox
+import csv
 
 
 class TodoApp:
@@ -59,19 +60,26 @@ class TodoApp:
             self.tasks_listbox.insert(tk.END, task)
 
     def save_tasks(self):
-        with open("tasks.txt", "w") as file:
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".csv", filetypes=[("CSV Files", "*.csv")]
+        )
+        with open(file_path, mode="w", encoding="utf-8") as file:
+            writer = csv.writer(file)
             for task in self.tasks:
-                file.write(task + "\n")
+                writer.writerow([task])
         messagebox.showinfo("Info", "Tasks saved successfully.")
 
     def load_tasks(self):
-        try:
-            with open("tasks.txt", "r") as file:
-                self.tasks = [line.strip() for line in file]
-            self.update_tasks_listbox()
-            messagebox.showinfo("Info", "Tasks loaded successfully.")
-        except FileNotFoundError:
-            messagebox.showwarning("Warning", "No saved tasks found.")
+        file_path = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+        if file_path:
+            try:
+                with open(file_path, mode="r", newline="", encoding="utf-8") as file:
+                    reader = csv.reader(file)
+                    self.tasks = [task[0] for task in reader]
+                self.update_tasks_listbox()
+                messagebox.showinfo("Info", "Tasks loaded successfully.")
+            except FileNotFoundError:
+                messagebox.showwarning("Warning", "No saved tasks found.")
 
 
 if __name__ == "__main__":
